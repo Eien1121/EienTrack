@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "es6",
+        "declaration": true,
+        "sourceMap": false,
+        "removeComments": false,
+        "outFile": "./track.js",
+        "lib": ["es6", "dom", "es2015.promise"]
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+}
