@@ -23,39 +23,19 @@ var track;
             ? JSON.parse(window.localStorage.getItem("dataError"))
             : [];
         sendError();
-
-        window.onerror = function(messageParam, url, line, col, error) {
-            if (messageParam.detail !== undefined) {
-                // console.log('proceed')
-                const { message, filename, lineno, colno, error, tagName, src } = messageParam.detail;
+        window.addEventListener("error", function (event) {
+            const { message, filename, lineno, colno, error } = event;
+            if (message && error) {
+                pushError({ message, filename, lineno, colno, error }, 1);
+            }
+            else {
+                const { tagName, src } = event.target;
                 if (tagName === "SCRIPT") {
-                    //這邊傳過去的error原始資料本來為空 看自定義後要怎麼傳
                     pushError({ message: message || "脚本加载错误", src, error }, 1);
                 }
-                sendError();
             }
-        }
-
-        window.addEventListener('error', function(event) {
-            if (!event.detail) {
-                const { message, filename, lineno, colno, error } = event;
-                const detail = { message, filename, lineno, colno, error };
-                if (!(message && error)) {
-                    const { tagName, src } = event.target;
-                    detail.tagName = tagName
-                    detail.src = src
-                    detail.error = new Error("自定义error")
-                    const errorEvent = new CustomEvent('error', {
-                        detail
-                    })
-                    window.dispatchEvent(errorEvent)
-                } else {
-                    pushError({ message, filename, lineno, colno, error }, 1);
-                    sendError();
-                }
-
-            }
-        }, true)
+            sendError();
+        }, true);
     }
     track.init = init;
     /**添加一个错误信息 */
@@ -89,7 +69,6 @@ var track;
             }
         }
     }
-    track.sendError = sendError;
     /**保存到本地 */
     function saveToStorage() {
         window.localStorage.setItem("dataError", JSON.stringify(track.dataError));
