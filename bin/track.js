@@ -23,57 +23,39 @@ var track;
             ? JSON.parse(window.localStorage.getItem("dataError"))
             : [];
         sendError();
-        window.onerror = function (message, url, line, col, error) {
-            console.log('window onerror')
-            // window.dispatchEvent(new ErrorEvent("error", {
-            //     //@ts-ignore
-            //     message: message,
-            //     url: url,
-            //     line: line,
-            //     col: col,
-            //     error: error,
-            // }));
-            console.log('36363636')
-            const errorEvent = new ErrorEvent("error", {
-                message: "自定義的錯誤訊息",
-                filename: "自定義文件.js",
-                lineno: 42,
-                colno: 21,
-                error: new Error("這是自定義的錯誤對象")
-            });
-            window.dispatchEvent(errorEvent);
-            console.log('45454545')
-        };
-        // console.log('3838')
-        // const errorEvent = new ErrorEvent("error", {
-        //     message: "自定義的錯誤訊息",
-        //     filename: "自定義文件.js",
-        //     lineno: 42,
-        //     colno: 21,
-        //     error: new Error("這是自定義的錯誤對象")
-        // });
-        // window.dispatchEvent(errorEvent);
-        // console.log('4747')
 
-        window.addEventListener("error", function (event) {
-            console.log('37373737')
-            console.log(event.message);      // 自定義的錯誤訊息
-            console.log(event.filename);     // 自定義文件.js
-            console.log(event.lineno);       // 42
-            console.log(event.colno);        // 21
-            console.log(event.error);        // 錯誤對象
-            // const { message, filename, lineno, colno, error } = event;
-            // if (message && error) {
-            //     pushError({ message, filename, lineno, colno, error }, 1);
-            // }
-            // else {
-            //     const { tagName, src } = event.target;
-            //     if (tagName === "SCRIPT") {
-            //         pushError({ message: message || "脚本加载错误", src, error }, 1);
-            //     }
-            // }
-            // sendError();
-        }, true);
+        window.onerror = function(messageParam, url, line, col, error) {
+            if (messageParam.detail !== undefined) {
+                // console.log('proceed')
+                const { message, filename, lineno, colno, error, tagName, src } = messageParam.detail;
+                if (tagName === "SCRIPT") {
+                    //這邊傳過去的error原始資料本來為空 看自定義後要怎麼傳
+                    pushError({ message: message || "脚本加载错误", src, error }, 1);
+                }
+                sendError();
+            }
+        }
+
+        window.addEventListener('error', function(event) {
+            if (!event.detail) {
+                const { message, filename, lineno, colno, error } = event;
+                const detail = { message, filename, lineno, colno, error };
+                if (!(message && error)) {
+                    const { tagName, src } = event.target;
+                    detail.tagName = tagName
+                    detail.src = src
+                    detail.error = new Error("自定义error")
+                    const errorEvent = new CustomEvent('error', {
+                        detail
+                    })
+                    window.dispatchEvent(errorEvent)
+                } else {
+                    pushError({ message, filename, lineno, colno, error }, 1);
+                    sendError();
+                }
+
+            }
+        }, true)
     }
     track.init = init;
     /**添加一个错误信息 */
