@@ -23,6 +23,9 @@ var track;
             ? JSON.parse(window.localStorage.getItem("dataError"))
             : [];
         sendError();
+        window.onerror = function (event) {
+            console.log('test ONERROR')
+        }
         window.addEventListener("error", function (event) {
             const { message, filename, lineno, colno, error } = event;
             if (message && error) {
