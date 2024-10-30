@@ -29,9 +29,11 @@ var track;
         window.addEventListener("error", function (event) {
             const { message, filename, lineno, colno, error } = event;
             if (message && error) {
+                dataLayer.push({ event: 'ErrorTypeOne' })
                 pushError({ message, filename, lineno, colno, error }, 1);
             }
             else {
+                dataLayer.push({ event: 'ErrorTypeTwo' })
                 const { tagName, src } = event.target;
                 if (tagName === "SCRIPT") {
                     pushError({ message: message || "脚本加载错误", src, error }, 1);
