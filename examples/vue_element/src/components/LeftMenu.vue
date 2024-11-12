@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { routes } from "@/router/index.ts";
-
+console.log("1");
 const activePath = ref(location.hash);
 </script>
 
