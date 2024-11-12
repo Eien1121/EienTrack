@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "es6",
+        "declaration": true,
+        "sourceMap": false,
+        "removeComments": false,
+        "outFile": "./tokuu_track.js",
+        "lib": ["es6", "dom", "es2015.promise"],
+        "skipLibCheck": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+}
