@@ -8,11 +8,31 @@ function onFacebookLogin() {
     });
 }
 
-google.init("605667378554-v78246odt63e0tni0gjpk8pavtcpm6v0.apps.googleusercontent.com");
+google.init("743283045630-6iva1leiq1ql649na56t9qdpfej9bipb.apps.googleusercontent.com");
 function onGoogleLogin() {
     google.login().then((response) => {
         console.log("登录成功：", response);
+        getUserProfile(response).then((userProfile) => {
+            console.log("User Profile:", userProfile);
+        });
     });
+}
+
+async function getUserProfile(accessToken) {
+    try {
+        const response = await fetch("https://www.googleapis.com/auth/userinfo.profile", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        // var xhr = new XMLHttpRequest();
+        // xhr.open("GET", "https://www.googleapis.com/auth/userinfo.profile");
+        // xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
+        // xhr.send();
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+    }
 }
 
 telegram.init({ bot_id: "7716747902", request_access: "write", embed: 1 });
