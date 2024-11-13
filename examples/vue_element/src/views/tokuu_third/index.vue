@@ -21,6 +21,7 @@ function onGoogleLogin() {
 async function getUserProfile(accessToken: string) {
     try {
         const response = await fetch("https://www.googleapis.com/auth/userinfo.profile", {
+            method: "Get",
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
