@@ -60,7 +60,7 @@ namespace tokuu_third.google {
                 code: code,
                 client_id: config.client_id,
                 client_secret: "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",
-                redirect_uri: "http://localhost:5173",
+                redirect_uri: "https://eien-track.vercel.app",
                 grant_type: "authorization_code",
             }),
         });
