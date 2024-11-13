@@ -49,4 +49,22 @@ namespace tokuu_third.google {
             }
         });
     }
+    export async function exchangeCodeForToken(code: string) {
+        console.log("exchangeCodeForToken");
+        const response = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                code: code,
+                client_id: config.client_id,
+                client_secret: "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",
+                redirect_uri: "http://localhost:5173",
+                grant_type: "authorization_code",
+            }),
+        });
+
+        return await response.json();
+    }
 }

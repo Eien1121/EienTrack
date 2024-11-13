@@ -10,30 +10,55 @@ function onFacebookLogin() {
 
 google.init("743283045630-6iva1leiq1ql649na56t9qdpfej9bipb.apps.googleusercontent.com");
 function onGoogleLogin() {
-    google.login().then((response) => {
+    google.login().then(async (response) => {
         console.log("登录成功：", response);
-        getUserProfile(response).then((userProfile) => {
+        const { access_token } = await google.exchangeCodeForToken(response.code);
+        console.log("accessToken");
+        console.log(access_token);
+        getUserProfile(access_token).then((userProfile) => {
             console.log("User Profile:", userProfile);
         });
     });
 }
 
+// https://www.googleapis.com/auth/userinfo.profile
+// https://www.googleapis.com/auth/userinfo.email
+// https://www.googleapis.com/oauth2/v3/userinfo
 async function getUserProfile(accessToken: string) {
     try {
-        const response = await fetch("https://www.googleapis.com/auth/userinfo.profile", {
+        const response = await fetch("https://www.googleapis.com/auth/userinfo.email", {
             method: "Get",
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        // var xhr = new XMLHttpRequest();
-        // xhr.open("GET", "https://www.googleapis.com/auth/userinfo.profile");
-        // xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
-        // xhr.send();
         return await response.json();
     } catch (error) {
         console.error("Error fetching user profile:", error);
     }
+
+    // var xhr = new XMLHttpRequest();
+    // xhr.open("GET", "https://www.googleapis.com/auth/userinfo.profile");
+    // xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    //
+    // // 监听请求完成事件
+    // xhr.onload = function () {
+    //     if (xhr.status === 200) {
+    //         // 成功获取数据
+    //         var response = JSON.parse(xhr.responseText);
+    //         console.log(response); // 在这里处理 response 数据
+    //     } else {
+    //         console.error("请求失败:", xhr.status, xhr.statusText);
+    //     }
+    // };
+    //
+    // // 监听请求错误事件
+    // xhr.onerror = function () {
+    //     console.error("请求出错");
+    // };
+    //
+    // // 发送请求
+    // xhr.send();
 }
 
 telegram.init({ bot_id: "7716747902", request_access: "write", embed: 1 });
