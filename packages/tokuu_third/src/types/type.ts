@@ -6,6 +6,7 @@ declare namespace FB {
 
 declare namespace google.accounts.oauth2 {
     function initCodeClient(params: any);
+    function initTokenClient(params: any);
 }
 
 declare namespace Telegram.Login {

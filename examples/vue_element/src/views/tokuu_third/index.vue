@@ -12,10 +12,10 @@ google.init("743283045630-6iva1leiq1ql649na56t9qdpfej9bipb.apps.googleuserconten
 function onGoogleLogin() {
     google.login().then(async (response) => {
         console.log("登录成功：", response);
-        const { access_token } = await google.exchangeCodeForToken(response.code);
-        console.log("accessToken");
-        console.log(access_token);
-        getUserProfile(access_token).then((userProfile) => {
+        // const { access_token } = await google.exchangeCodeForToken(response.code);
+        // console.log("accessToken");
+        // console.log(access_token);
+        getUserProfile(response.access_token).then((userProfile) => {
             console.log("User Profile:", userProfile);
         });
     });

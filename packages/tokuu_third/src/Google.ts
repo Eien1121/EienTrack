@@ -32,18 +32,17 @@ namespace tokuu_third.google {
     export function login(): Promise<any> {
         return new Promise((resolve, reject) => {
             if (isInit) {
-                window.google.accounts.oauth2
-                    .initCodeClient(
-                        Object.assign(config, {
-                            callback: (response: any) => {
-                                resolve(response);
-                            },
-                            error_callback: (error: any) => {
-                                reject(EnumThirdStatus.FAILED);
-                            },
-                        })
-                    )
-                    .requestCode();
+                const client = window.google.accounts.oauth2.initTokenClient(
+                    Object.assign(config, {
+                        callback: (response: any) => {
+                            resolve(response);
+                        },
+                        error_callback: (error: any) => {
+                            reject(EnumThirdStatus.FAILED);
+                        },
+                    })
+                );
+                client.requestAccessToken();
             } else {
                 return reject(EnumThirdStatus.UNINITIALIZED);
             }
